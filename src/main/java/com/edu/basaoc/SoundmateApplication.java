@@ -2,12 +2,14 @@ package com.edu.basaoc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-public class SpotifriendsApplication {
+@EnableConfigurationProperties
+public class SoundmateApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpotifriendsApplication.class, args);
+        SpringApplication.run(SoundmateApplication.class, args);
     }
 
 }
