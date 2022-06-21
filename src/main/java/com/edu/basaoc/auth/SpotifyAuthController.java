@@ -2,6 +2,7 @@ package com.edu.basaoc.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,26 +15,34 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
+@ConstructorBinding
 @ConfigurationProperties(prefix = "spotify.auth")
 @Slf4j
 public class SpotifyAuthController {
 
+    // TODO change uri depending on environment - this doesnt work on mobile<->server communication
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://10.0.2.2:8080/api/get-user-code/");
 
     private String clientId = "";
     private String clientSecret = "";
 
-    private SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRedirectUri(redirectUri)
-            .build();
+    private SpotifyApi spotifyApi = null;
+
+    @PostConstruct
+    private void setSpotifyApi() {
+        this.spotifyApi = new SpotifyApi.Builder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRedirectUri(redirectUri)
+                .build();
+    }
 
     @GetMapping("login")
     @ResponseBody
