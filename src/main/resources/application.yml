@@ -1,4 +1,12 @@
-spotify:
-  auth:
-    clientId: ${SPOTIFY_CLIENT_ID}
-    clientSecret: ${SPOTIFY_CLIENT_SECRET}
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/soundmate
+    username: postgres
+    password: w{|jCLTk]xb98t6^'^E-
+soundmate:
+  jwtSecret: ${JWT_SECRET}
+  jwtExpirationMs: 86400000
+  authCred: WV!F}O=d7Bs?DmW9KN!l
+  spotifyClientId: 83bf8873115447d893923470b70d209a
+  spotifyClientSecret: e2c2c0bc47f64a7ca249c49846599d50
+
