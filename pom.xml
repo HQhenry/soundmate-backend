@@ -72,6 +72,10 @@
             <artifactId>lombok-mapstruct-binding</artifactId>
             <version>0.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,6 +88,7 @@
             <artifactId>spotify-web-api-java</artifactId>
             <version>7.2.0</version>
         </dependency>
+
     </dependencies>
 
     <build>

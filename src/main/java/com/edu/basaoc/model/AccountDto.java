@@ -1,11 +1,15 @@
 package com.edu.basaoc.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 public class AccountDto {
 
     private Long id;
@@ -14,4 +18,9 @@ public class AccountDto {
     private String refreshToken;
     private Instant accessExpiresOn;
 
+    public AccountDto(String accessToken, String refreshToken, Instant accessExpiresOn) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.accessExpiresOn = accessExpiresOn;
+    }
 }

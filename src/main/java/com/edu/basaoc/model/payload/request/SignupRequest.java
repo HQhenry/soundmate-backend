@@ -1,4 +1,4 @@
-package com.edu.basaoc.payload;
+package com.edu.basaoc.model.payload.request;
 
 import lombok.Data;
 
