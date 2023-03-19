@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: ${AZURE_POSTGRESQL_CONNECTIONSTRING}
+    url: jdbc:postgresql://${PG_HOST}:5432/${PG_DB_NAME}
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
 soundmate:
@@ -8,14 +10,5 @@ soundmate:
   jwtExpirationDays: 30
   spotifyClientId: 83bf8873115447d893923470b70d209a
   spotifyClientSecret: ${SPOTIFY_CLIENT_SECRET}
----
 
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    url: jdbc:postgresql://localhost:5432/soundmate
-    username: postgres
-    password: ${PG_PASSWORD}
 
