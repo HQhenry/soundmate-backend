@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: ${AZURE_POSTGRESQL_CONNECTIONSTRING}
+    url: jdbc:postgresql://soundmate-backend-server.postgres.database.azure.com:5432/soundmate-backend-database?sslmode=require
+    username: mxxhevlmnc
 
 ---
 
