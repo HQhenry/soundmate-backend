@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/soundmate
+    username: postgres
+    password: ${PG_PASSWORD}
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+soundmate:
+  jwtSecret: ${JWT_SECRET}
+  jwtExpirationDays: 30
+  spotifyClientId: 83bf8873115447d893923470b70d209a
+  spotifyClientSecret: ${SPOTIFY_CLIENT_SECRET}
+
