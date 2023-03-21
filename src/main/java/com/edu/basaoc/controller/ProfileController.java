@@ -30,7 +30,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     //For testing
-    private static final String accessToken = "BQBCoi4SBBzjo8CIoXKQqwxE-Bv2_X0BkUFkfSQeDNiwxSacu3u9VaCWVHOzHR5lbYctautTl8TBgLEVS6lUbl8nisEAIWgHf50EKHY8V1qt_JH8qkjlT-zVuXvWvX6w-itcEvDza0shjt1OsGCZnwd3rgX6LioWragM5i9LXEfm_Z31z2JtjXBj7j0YvvswRgKOJhxqOE1A";
+    private static final String accessToken = "BQCBOhfpIsVQs5MjEKgc-GG78ViHr4Td0eZDdbGRnFcD9vLaDImGWHLIBDtwGQxzrWV98HOMz03y9fce21XfCQKWlba-uEuWlIvUYTdmcGTK84TInw32lC12n7hMmu55f-vwDakB02Hq8RnSne7dqyjh1wVEez256ZNpANMl4RpX1f9-Ooz1jrHHQN3V6y9P7F7zYzUnKnRU";
 
 
     public ProfileController(AccountService accountService, ProfileService profileService) {
@@ -38,8 +38,8 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    private SpotifyApi getSpotifyapi(String accessToken, Principal principal) {
-        String username = principal.getName();
+    private SpotifyApi getSpotifyapi(String accessToken /*, Principal principal*/) {
+       // String username = principal.getName();
         //For testing
         Account account = accountService.getAccountByAccountId(1L);
         //Account account = accountService.findByUsername(username);
@@ -54,8 +54,8 @@ public class ProfileController {
     @GetMapping(value = "/fetch-top-artists")
     //TODO: don't forget to change the profile in Configurations
     //TODO: has to be implemented in scheduler later
-    public ArtistDto[] fetchTopArtists(Principal principal) {
-        SpotifyApi spotifyApi = getSpotifyapi(accessToken, principal);
+    public ArtistDto[] fetchTopArtists(/*Principal principal*/) {
+        SpotifyApi spotifyApi = getSpotifyapi(accessToken /*, principal*/);
         final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
                 .limit(10)
                 .build();

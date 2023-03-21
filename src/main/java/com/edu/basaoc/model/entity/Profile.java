@@ -25,7 +25,7 @@ public class Profile {
     private String infoText;
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_fk", referencedColumnName = "accountId")
+    @JoinColumn(name = "account_fk", referencedColumnName = "account_id")
     private Account account;
     //TODO: eventuell weg
     @Setter
@@ -46,16 +46,20 @@ public class Profile {
     @Column(name = "diverse_factor")
     private double diverseFactor;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "top_artists",
-            joinColumns = @JoinColumn(name = "profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "artist_id")
+            joinColumns = @JoinColumn(name = "profile_fk"),
+            inverseJoinColumns = @JoinColumn(name = "artist_fk")
     )
     Set<Artist> topArtists = new HashSet<>();
 
     public void addTopArtist(Artist artist) {
         topArtists.add(artist);
-        artist.getProfiles().add(this);
+        //artist.getProfiles().add(this);
     }
 }

@@ -37,8 +37,11 @@ public class ProfileService {
             newArtist.setName(artistDto.getName());
             newArtist.setImageUrl(artistDto.getImageUrl());
             newArtist.addProfile(profileRepository.findByAccount(account));
+            System.out.println(profileRepository.findByAccount(account).getProfileId());
+            artistRepository.save(newArtist);
         } else {
             artist.get().addProfile(profileRepository.findByAccount(account));
+            artistRepository.save(artist.get());
         }
     }
 

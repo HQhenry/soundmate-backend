@@ -1,5 +1,6 @@
 package com.edu.basaoc.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,13 @@ public class Artist {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "topArtists")
+    @JsonIgnore
     Set<Profile> profiles = new HashSet<>();
 
     public void addProfile(Profile profile) {
