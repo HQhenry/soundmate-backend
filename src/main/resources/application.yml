@@ -5,6 +5,7 @@ spring:
     password: ${PG_PASSWORD}
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
+
 soundmate:
   jwtSecret: ${JWT_SECRET}
   jwtExpirationDays: 30

@@ -33,4 +33,13 @@ public class SpotifyAuthService {
         }
     }
 
+    public AuthorizationCodeCredentials refreshAccessToken(String refreshToken){
+        try {
+            return spotifyApi.authorizationCodeRefresh(clientId, clientSecret, refreshToken).build().execute();
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            //log.error("Could not refresh spotify access", e);
+            throw new AuthenticationServiceException("Could not refresh spotify access", e);
+        }
+    }
+
 }

@@ -53,8 +53,8 @@ public class Profile {
             })
     @JoinTable(
             name = "top_artists",
-            joinColumns = @JoinColumn(name = "profile_fk"),
-            inverseJoinColumns = @JoinColumn(name = "artist_fk")
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
     Set<Artist> topArtists = new HashSet<>();
 
