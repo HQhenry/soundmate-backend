@@ -64,7 +64,9 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<ProfileResponseDto> getProfile(Principal principal) {
         Account account = accountService.findByUsername(principal.getName());
+        String pictureUrl = spotifyDataService.fetchUserProfilePicture(account, accountService);
         ProfileResponseDto profile = profileService.getProfile(account);
+        profile.setProfilePictureUrl(pictureUrl);
         return ResponseEntity.ok().body(profile);
     }
 }

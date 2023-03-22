@@ -13,11 +13,10 @@ import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.ArtistRepository;
 import com.edu.basaoc.model.repository.GenreRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

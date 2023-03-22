@@ -100,4 +100,16 @@ public class SpotifyDataService {
         }
         return null;
     }
+
+    public String fetchUserProfilePicture(Account account, AccountService accountService) {
+        SpotifyApi spotifyApi = getSpotifyapi(account, accountService);
+
+        try {
+            final User user = spotifyApi.getCurrentUsersProfile().build().execute();
+            return user.getImages()[0].getUrl();
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            log.error("Unexpected response from spotify", e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected response from spotify");
+        }
+    }
 }

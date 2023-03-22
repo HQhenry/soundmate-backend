@@ -17,4 +17,5 @@ public class ProfileResponseDto {
     private String contactInfo;
     private Set<ArtistDto> topArtists;
     private Set<GenreDto> topGenres;
+    private String profilePictureUrl;
 }
