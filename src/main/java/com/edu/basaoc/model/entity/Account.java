@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -53,6 +54,9 @@ public class Account {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @OneToOne(mappedBy = "account")
+    private Profile profile;
 
     public Account(String username, String password) {
         this.username = username;
