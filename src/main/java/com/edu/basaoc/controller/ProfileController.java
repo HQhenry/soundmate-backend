@@ -1,5 +1,6 @@
 package com.edu.basaoc.controller;
 
+import com.edu.basaoc.model.ProfileResponseDto;
 import com.edu.basaoc.model.entity.Account;
 import com.edu.basaoc.model.ArtistDto;
 import com.edu.basaoc.model.entity.Profile;
@@ -81,5 +82,12 @@ public class ProfileController {
         }
         //noch nicht fertig
         return ResponseEntity.ok().body(genres);
+    }
+
+    @GetMapping
+    public ResponseEntity<ProfileResponseDto> getProfile(Principal principal) {
+        Account account = accountService.findByUsername(principal.getName());
+        ProfileResponseDto profile = profileService.getProfile(account);
+        return ResponseEntity.ok().body(profile);
     }
 }
