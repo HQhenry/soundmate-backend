@@ -40,4 +40,8 @@ public class Artist {
         profile.getTopArtists().add(this);
     }
 
+    public void removeProfile(Profile profile) {
+        profiles.remove(profile);
+        profile.getTopArtists().remove(profile);
+    }
 }

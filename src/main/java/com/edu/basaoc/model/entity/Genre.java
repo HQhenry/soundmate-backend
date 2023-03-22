@@ -28,10 +28,15 @@ public class Genre {
             },
             mappedBy = "topGenres")
     @JsonIgnore
-    Set<Profile> profiles = new HashSet<>();
+    private Set<Profile> profiles = new HashSet<>();
 
     public void addProfile(Profile profile) {
         profiles.add(profile);
         profile.getTopGenres().add(this);
+    }
+
+    public void removeProfile(Profile profile) {
+        profiles.remove(profile);
+        profile.getTopGenres().remove(this);
     }
 }

@@ -2,48 +2,43 @@ package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.entity.Account;
+import com.edu.basaoc.model.entity.Artist;
 import com.edu.basaoc.model.entity.Genre;
 import com.edu.basaoc.model.entity.Profile;
+import com.edu.basaoc.model.mapper.GenreDtoMapper;
 import com.edu.basaoc.model.repository.GenreRepository;
-import com.edu.basaoc.model.repository.ProfileRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.edu.basaoc.service.ProfileService.genreDtoMapper;
-import static org.aspectj.weaver.Shadow.ExceptionHandler;
-
-@Service public class GenreService {
+@Service
+public class GenreService {
 
 
-
+    private static final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
     private final GenreRepository genreRepository;
-    private final ProfileRepository profileRepository;
-    private final SpotifyDataService spotifyDataService;
-    private final AccountService accountService;
 
 
-    public GenreService(GenreRepository genreRepository, ProfileRepository profileRepository, SpotifyDataService spotifyDataService, AccountService accountService) {
+    public GenreService(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
-        this.profileRepository = profileRepository;
-        this.spotifyDataService = spotifyDataService;
-        this.accountService = accountService;
     }
 
-    public List<GenreDto> setTopGenres(Account account) throws RuntimeException{
-
-        //TODO: remove top genres of user
-
-        List<String> genres = spotifyDataService.getUsersTopGenres(account, accountService);
-       if (genres == null || genres.size() == 0) {
-            throw new RuntimeException("No genres found");
-        }
+    public void setTopGenres(Profile profile, Iterable<String> genres) throws RuntimeException {
+        profile.getTopGenres().clear();
         List<GenreCounter> genreCounters = new ArrayList<>();
 
-        HashMap<String, Integer> genreOccurences = new HashMap<String, Integer>();
+        HashMap<String, Integer> genreOccurences = new HashMap<>();
         for (String genre : genres) {
             if (genreOccurences.containsKey(genre)) {
                 genreOccurences.put(genre, genreOccurences.get(genre) + 1);
@@ -51,36 +46,43 @@ import static org.aspectj.weaver.Shadow.ExceptionHandler;
                 genreOccurences.put(genre, 1);
             }
         }
+
         for (Map.Entry<String, Integer> entry : genreOccurences.entrySet()) {
             genreCounters.add(new GenreCounter(entry.getKey(), entry.getValue()));
         }
-        genreCounters.sort(Comparator.comparingInt(GenreCounter::getCounter).reversed());
-        List<GenreDto> firstNElementsList = genreCounters.stream().limit(10).collect(Collectors.toList())
-                .stream().map(genreCounter -> new GenreDto(genreCounter.genre)).collect(Collectors.toList());
 
-        for (GenreDto genreDto : firstNElementsList) {
-            Optional<Genre> genre = genreRepository.findByName(genreDto.getName());
+        genreCounters.sort(Comparator.comparingInt(GenreCounter::getCounter).reversed());
+        List<String> firstNElementsList = genreCounters
+                .stream()
+                .limit(10)
+                .map(genreCounter -> genreCounter.genre)
+                .collect(Collectors.toList());
+
+        for (String genreName : firstNElementsList) {
+            Optional<Genre> genre = genreRepository.findByName(genreName);
             if (genre.isEmpty()) {
                 Genre newGenre = new Genre();
-                newGenre.setName(genreDto.getName());
-                newGenre.addProfile(profileRepository.findByAccount(account));
+                newGenre.setName(genreName);
+                newGenre.addProfile(profile);
                 genreRepository.save(newGenre);
             } else {
-                genre.get().addProfile(profileRepository.findByAccount(account));
+                genre.get().addProfile(profile);
                 genreRepository.save(genre.get());
             }
         }
-        return firstNElementsList;
     }
 
     public Set<GenreDto> getTopGenres(Account account) {
-        Profile profile = profileRepository.findByAccount(account);
-        return profile.getTopGenres().stream().map(genreDtoMapper::entityToDto).collect(Collectors.toSet());
+        return account.getProfile().getTopGenres()
+                .stream()
+                .map(genreDtoMapper::entityToDto)
+                .collect(Collectors.toSet());
     }
+
     @AllArgsConstructor
     @Getter
-    class GenreCounter{
-        String genre;
-        int counter;
+    static class GenreCounter {
+        private String genre;
+        private int counter;
     }
 }

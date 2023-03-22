@@ -1,11 +1,21 @@
 package com.edu.basaoc.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,12 +61,7 @@ public class Profile {
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
-    Set<Artist> topArtists = new HashSet<>();
-
-    public void addTopArtist(Artist artist) {
-        topArtists.add(artist);
-        //artist.getProfiles().add(this);
-    }
+    private Set<Artist> topArtists = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -68,5 +73,25 @@ public class Profile {
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    Set<Genre> topGenres = new HashSet<>();
+    private Set<Genre> topGenres = new HashSet<>();
+
+    public void addTopArtist(Artist artist) {
+        topArtists.add(artist);
+        artist.getProfiles().add(this);
+    }
+
+    public void removeTopArtist(Artist artist) {
+        topArtists.remove(artist);
+        artist.getProfiles().remove(this);
+    }
+
+    public void addTopGenre(Genre genre) {
+        topGenres.add(genre);
+        genre.getProfiles().add(this);
+    }
+
+    public void removeTopGenre(Genre genre) {
+        topGenres.remove(genre);
+        genre.getProfiles().remove(this);
+    }
 }
