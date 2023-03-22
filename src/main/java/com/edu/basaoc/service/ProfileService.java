@@ -1,17 +1,26 @@
 package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.ArtistDto;
+import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.ProfileRequestDto;
+import com.edu.basaoc.model.ProfileResponseDto;
 import com.edu.basaoc.model.entity.Account;
 import com.edu.basaoc.model.entity.Artist;
+import com.edu.basaoc.model.entity.Genre;
 import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.mapper.ArtistDtoMapper;
+import com.edu.basaoc.model.mapper.GenreDtoMapper;
+import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.ArtistRepository;
+import com.edu.basaoc.model.repository.GenreRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +29,11 @@ import java.util.stream.Collectors;
 @Service
 public class ProfileService {
 
-    private static final ArtistDtoMapper artistDtoMapper = Mappers.getMapper(ArtistDtoMapper.class);
+    private static final ArtistDtoMapper mapper = Mappers.getMapper(ArtistDtoMapper.class);
+    static final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
+    private static final ProfileResponseDtoMapper profileResponseDtoMapper = Mappers.getMapper(ProfileResponseDtoMapper.class);
+
+
 
     private final ArtistRepository artistRepository;
     private final ProfileRepository profileRepository;
@@ -77,8 +90,15 @@ public class ProfileService {
 
     public Set<ArtistDto> getTopArtists(Account account) {
         Profile profile = profileRepository.findByAccount(account);
-        return profile.getTopArtists().stream().map(artistDtoMapper::entityToDto).collect(Collectors.toSet());
+        return profile.getTopArtists().stream().map(mapper::entityToDto).collect(Collectors.toSet());
     }
 
+    public String getProfilePictureUrl(Account account) {
+        return getProfilePictureUrl(account);
+    }
+
+public Profile getProfileById(Long profileId) {
+        return profileRepository.findByProfileId(profileId).orElseThrow();
+    }
 
 }

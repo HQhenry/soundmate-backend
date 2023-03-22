@@ -1,24 +1,21 @@
 package com.edu.basaoc.controller;
 
+import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.ProfileRequestDto;
 import com.edu.basaoc.model.ProfileResponseDto;
 import com.edu.basaoc.model.entity.Account;
 import com.edu.basaoc.model.ArtistDto;
 import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
-import com.edu.basaoc.service.AccountService;
-import com.edu.basaoc.service.ProfileService;
+import com.edu.basaoc.service.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.security.Principal;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -40,10 +37,19 @@ public class ProfileController {
         return ResponseEntity.ok().body(profileService.getTopArtists(accountService.findByUsername(principal.getName())));
     }
 
+    @GetMapping("/{profileId}")
+    public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long profileId, Principal principal) {
+        ProfileResponseDto profileResponseDto = profileResponseDtoMapper.entityToDto(profileService.getProfileById(profileId));
+        profileResponseDto.setProfilePictureUrl("https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c");
+        return ResponseEntity.ok().body(profileResponseDto);
+    }
+
     @GetMapping
-    public ResponseEntity<ProfileResponseDto> getProfile(Principal principal) {
+    public ResponseEntity<ProfileResponseDto> getProfileById(Principal principal) {
         Account account = accountService.findByUsername(principal.getName());
-        return ResponseEntity.ok().body(profileResponseDtoMapper.entityToDto(account.getProfile()));
+        ProfileResponseDto profileResponseDto = profileResponseDtoMapper.entityToDto(account.getProfile());
+        profileResponseDto.setProfilePictureUrl("https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c");
+        return ResponseEntity.ok().body(profileResponseDto);
     }
 
     @PutMapping
