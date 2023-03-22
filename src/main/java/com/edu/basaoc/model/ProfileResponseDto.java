@@ -16,4 +16,5 @@ public class ProfileResponseDto {
     private long age;
     private String contactInfo;
     private Set<ArtistDto> topArtists;
+    private Set<GenreDto> topGenres;
 }

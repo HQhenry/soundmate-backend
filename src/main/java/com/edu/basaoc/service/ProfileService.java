@@ -13,6 +13,8 @@ import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.ArtistRepository;
 import com.edu.basaoc.model.repository.GenreRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 public class ProfileService {
 
     private static final ArtistDtoMapper mapper = Mappers.getMapper(ArtistDtoMapper.class);
-    private static final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
+    static final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
     private static final ProfileResponseDtoMapper profileResponseDtoMapper = Mappers.getMapper(ProfileResponseDtoMapper.class);
 
 
@@ -62,24 +64,5 @@ public class ProfileService {
     public Set<ArtistDto> getTopArtists(Account account) {
         Profile profile = profileRepository.findByAccount(account);
         return profile.getTopArtists().stream().map(mapper::entityToDto).collect(Collectors.toSet());
-    }
-
-    public void setTopGenre(GenreDto genreDto, Account account) {
-        //TODO: remove top genres of user
-        Optional<Genre> genre = genreRepository.findByName(genreDto.getName());
-        if (genre.isEmpty()) {
-            Genre newGenre = new Genre();
-            newGenre.setName(genreDto.getName());
-            newGenre.addProfile(profileRepository.findByAccount(account));
-            genreRepository.save(newGenre);
-        } else {
-            genre.get().addProfile(profileRepository.findByAccount(account));
-            genreRepository.save(genre.get());
-        }
-    }
-
-    public Set<GenreDto> getTopGenres(Account account) {
-        Profile profile = profileRepository.findByAccount(account);
-        return profile.getTopGenres().stream().map(genreDtoMapper::entityToDto).collect(Collectors.toSet());
     }
 }
