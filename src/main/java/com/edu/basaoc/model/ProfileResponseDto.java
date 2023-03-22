@@ -12,6 +12,8 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 public class ProfileResponseDto {
+
+    private long profileId;
     private String name;
     private long age;
     private String contactInfo;
