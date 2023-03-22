@@ -21,6 +21,9 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -60,4 +63,23 @@ public class ProfileController {
         return ResponseEntity.ok().body( profileService.getTopArtists(accountService.findByUsername(principal.getName())));
     }
 
+    @GetMapping(value = "/fetch-top-genres")
+    // has to be implemented in scheduler later
+    public ResponseEntity<List<String>> fetchTopGenres(Principal principal) {
+
+        List<String> genres = spotifyDataService.getUsersTopGenres(accountService.findByUsername(principal.getName()), accountService);
+        if (genres == null || genres.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        HashMap<String, Integer> genreOccurences = new HashMap<String, Integer>();
+        for (String genre : genres) {
+            if (genreOccurences.containsKey(genre)) {
+                genreOccurences.put(genre, genreOccurences.get(genre) + 1);
+            } else {
+                genreOccurences.put(genre, 1);
+            }
+        }
+        //noch nicht fertig
+        return ResponseEntity.ok().body(genres);
+    }
 }

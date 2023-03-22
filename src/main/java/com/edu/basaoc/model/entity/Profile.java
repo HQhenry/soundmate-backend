@@ -1,5 +1,6 @@
 package com.edu.basaoc.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,15 +22,9 @@ public class Profile {
     @Column(name = "name")
     private String name;
     @Setter
-    @Column(name = "info_text")
-    private String infoText;
-    @Setter
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_fk", referencedColumnName = "account_id")
     private Account account;
-    //TODO: eventuell weg
-    @Setter
-    private String spotifyUserId;
     @Setter
     @Column(name = "age")
     private long age;
@@ -62,4 +57,16 @@ public class Profile {
         topArtists.add(artist);
         //artist.getProfiles().add(this);
     }
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "top_genres",
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    Set<Genre> topGenres = new HashSet<>();
 }
