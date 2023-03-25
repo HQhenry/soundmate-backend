@@ -12,7 +12,6 @@ import org.mapstruct.MappingTarget;
 public interface ProfileResponseDtoMapper {
     Profile dtoToEntity(ProfileResponseDto dto);
 
-    @Mapping(target = "profilePictureUrl", ignore = true)
     ProfileResponseDto entityToDto(Profile profile);
 
     Profile updateEntityFromDto(ProfileResponseDto dto, @MappingTarget Profile profile);

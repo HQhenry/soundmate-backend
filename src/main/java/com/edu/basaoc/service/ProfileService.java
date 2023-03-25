@@ -41,7 +41,7 @@ public class ProfileService {
         Profile profile = new Profile();
         profile.setAccount(account);
         profileRepository.save(profile);
-        profile.setProfileImageUrl(profileImageUrl);
+        profile.setProfilePictureUrl(profileImageUrl);
         setTopArtists(profile, spotifyArtists);
         genreService.setTopGenres(profile, genres);
         return profileRepository.save(profile);
@@ -61,7 +61,7 @@ public class ProfileService {
     }
 
     public void updateProfileImageUrl(Profile profile, String profileImageUrl) {
-        profile.setProfileImageUrl(profileImageUrl);
+        profile.setProfilePictureUrl(profileImageUrl);
         profileRepository.save(profile);
     }
 

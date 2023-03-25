@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -43,7 +42,7 @@ public class Profile {
 
     @Setter
     @Column(name = "profile_image_url")
-    private String profileImageUrl;
+    private String profilePictureUrl;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {

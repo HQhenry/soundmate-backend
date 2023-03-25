@@ -1,6 +1,5 @@
 package com.edu.basaoc.controller;
 
-import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.ProfileRequestDto;
 import com.edu.basaoc.model.ProfileResponseDto;
 import com.edu.basaoc.model.entity.Account;
@@ -9,10 +8,8 @@ import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.service.*;
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.security.Principal;
 import java.util.*;

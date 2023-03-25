@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Profile findByAccount(Account account); //TODO:Optiopnal
+    Profile findByAccount(Account account);
     //For testing purposes
     Optional<Profile> findByProfileId(Long profileId);
 }
