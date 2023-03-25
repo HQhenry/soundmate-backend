@@ -62,6 +62,7 @@ public class SpotifyAuthController {
                 loginRequest.getRedirectUri()
         );
         String userId = dataService.fetchUserId(credentials.getAccessToken());
+
         if (!accountService.userExists(userId)) {
             Account account = new Account(userId, encoder.encode(credentials.toString()));
             account.setAccessToken(credentials.getAccessToken());
@@ -72,7 +73,8 @@ public class SpotifyAuthController {
             // TODO move this into a listener
             Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
             List<String> usersTopGenres = dataService.getUsersTopGenres(account);
-            profileService.createProfile(account, usersTopArtists, usersTopGenres);
+            String profileImageUrl = dataService.fetchUserProfilePicture(account);
+            profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl);
         } else {
             Account account = accountService.findByUsername(userId);
             account.setAccessToken(credentials.getAccessToken());
@@ -83,6 +85,8 @@ public class SpotifyAuthController {
 
             Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
             List<String> usersTopGenres = dataService.getUsersTopGenres(account);
+            String profileImageUrl = dataService.fetchUserProfilePicture(account);
+            profileService.updateProfileImageUrl(account.getProfile(), profileImageUrl);
             profileService.updateProfileTopValues(account.getProfile(), usersTopArtists, usersTopGenres);
         }
         Authentication authentication = authenticationManager.authenticate(

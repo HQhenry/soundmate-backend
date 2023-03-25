@@ -1,26 +1,18 @@
 package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.ArtistDto;
-import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.ProfileRequestDto;
-import com.edu.basaoc.model.ProfileResponseDto;
 import com.edu.basaoc.model.entity.Account;
 import com.edu.basaoc.model.entity.Artist;
-import com.edu.basaoc.model.entity.Genre;
 import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.mapper.ArtistDtoMapper;
 import com.edu.basaoc.model.mapper.GenreDtoMapper;
 import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.ArtistRepository;
-import com.edu.basaoc.model.repository.GenreRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -45,10 +37,11 @@ public class ProfileService {
         this.genreService = genreService;
     }
 
-    public Profile createProfile(Account account, se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists, List<String> genres) {
+    public Profile createProfile(Account account, se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists, List<String> genres, String profileImageUrl) {
         Profile profile = new Profile();
         profile.setAccount(account);
         profileRepository.save(profile);
+        profile.setProfileImageUrl(profileImageUrl);
         setTopArtists(profile, spotifyArtists);
         genreService.setTopGenres(profile, genres);
         return profileRepository.save(profile);
@@ -65,6 +58,11 @@ public class ProfileService {
         setTopArtists(profile, spotifyArtists);
         genreService.setTopGenres(profile, genres);
         return profileRepository.save(profile);
+    }
+
+    public void updateProfileImageUrl(Profile profile, String profileImageUrl) {
+        profile.setProfileImageUrl(profileImageUrl);
+        profileRepository.save(profile);
     }
 
     public void setTopArtists(Profile profile, se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists) {
@@ -93,11 +91,7 @@ public class ProfileService {
         return profile.getTopArtists().stream().map(mapper::entityToDto).collect(Collectors.toSet());
     }
 
-    public String getProfilePictureUrl(Account account) {
-        return getProfilePictureUrl(account);
-    }
-
-public Profile getProfileById(Long profileId) {
+    public Profile getProfileById(Long profileId) {
         return profileRepository.findByProfileId(profileId).orElseThrow();
     }
 

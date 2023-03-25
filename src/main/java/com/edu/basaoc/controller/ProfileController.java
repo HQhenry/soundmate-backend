@@ -40,7 +40,6 @@ public class ProfileController {
     @GetMapping("/{profileId}")
     public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long profileId, Principal principal) {
         ProfileResponseDto profileResponseDto = profileResponseDtoMapper.entityToDto(profileService.getProfileById(profileId));
-        profileResponseDto.setProfilePictureUrl("https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c");
         return ResponseEntity.ok().body(profileResponseDto);
     }
 
@@ -48,7 +47,6 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDto> getProfileById(Principal principal) {
         Account account = accountService.findByUsername(principal.getName());
         ProfileResponseDto profileResponseDto = profileResponseDtoMapper.entityToDto(account.getProfile());
-        profileResponseDto.setProfilePictureUrl("https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c");
         return ResponseEntity.ok().body(profileResponseDto);
     }
 

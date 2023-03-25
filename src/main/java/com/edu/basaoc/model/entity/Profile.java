@@ -41,6 +41,10 @@ public class Profile {
     @Column(name = "diverse_factor")
     private double diverseFactor;
 
+    @Setter
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
