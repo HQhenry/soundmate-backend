@@ -14,10 +14,12 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.SavedTrack;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.User;
 import se.michaelthelin.spotify.requests.data.artists.GetSeveralArtistsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetUsersSavedTracksRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
+import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -62,11 +64,11 @@ public class SpotifyDataService {
         }
     }
 
-    public Artist[] getUsersTopArtists(Account account) {
+    public Artist[] getUsersTopArtists(Account account, int limit) {
         try {
             SpotifyApi spotifyApi = getSpotifyApi(account);
             final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
-                    .limit(10).build();
+                    .limit(limit).build();
             return getUsersTopArtistsRequest.execute().getItems();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.error("Error: " + e.getMessage());
@@ -120,5 +122,17 @@ public class SpotifyDataService {
             log.error("Unexpected response from spotify", e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected response from spotify");
         }
+    }
+
+    public Track[] getUsersTopTracks(Account account, int limit) {
+        try {
+            SpotifyApi spotifyApi = getSpotifyApi(account);
+            final GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
+                    .limit(limit).build();
+            return getUsersTopTracksRequest.execute().getItems();
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            log.error("Error: " + e.getMessage());
+        }
+        return new Track[]{};
     }
 }

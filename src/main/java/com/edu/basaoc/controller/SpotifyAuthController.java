@@ -71,10 +71,24 @@ public class SpotifyAuthController {
             accountService.createUser(account);
 
             // TODO move this into a listener
-            Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
+            Artist[] usersTopArtists = dataService.getUsersTopArtists(account, 10);
             List<String> usersTopGenres = dataService.getUsersTopGenres(account);
             String profileImageUrl = dataService.fetchUserProfilePicture(account);
-            profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl);
+
+            FactorCalculator factorCalculator = new FactorCalculator(dataService, account);
+            double [] mdnFactors = new double[3];
+            double noveltyFactor = 0;
+            double mainstreamFactor = 0;
+            double diversityFactor = 0;
+            try {
+                mdnFactors[2] = factorCalculator.calculateNoveltyFactor(); //noveltyFactor
+                mdnFactors[0] = factorCalculator.calculateMainstreamFactor(); // mainstreamFactor
+                mdnFactors[1] = factorCalculator.calculateDiversityFactor(); // diversityFactor
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl, mdnFactors);
         } else {
             Account account = accountService.findByUsername(userId);
             account.setAccessToken(credentials.getAccessToken());
@@ -83,7 +97,7 @@ public class SpotifyAuthController {
             account.setPassword(encoder.encode(credentials.toString()));
             accountService.updateUser(account);
 
-            Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
+            Artist[] usersTopArtists = dataService.getUsersTopArtists(account, 10);
             List<String> usersTopGenres = dataService.getUsersTopGenres(account);
             String profileImageUrl = dataService.fetchUserProfilePicture(account);
             profileService.updateProfileImageUrl(account.getProfile(), profileImageUrl);

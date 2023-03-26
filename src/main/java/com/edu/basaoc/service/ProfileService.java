@@ -37,13 +37,16 @@ public class ProfileService {
         this.genreService = genreService;
     }
 
-    public Profile createProfile(Account account, se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists, List<String> genres, String profileImageUrl) {
+    public Profile createProfile(Account account, se.michaelthelin.spotify.model_objects.specification.Artist[] spotifyArtists, List<String> genres, String profileImageUrl, double[] mdnValues) {
         Profile profile = new Profile();
         profile.setAccount(account);
         profileRepository.save(profile);
         profile.setProfilePictureUrl(profileImageUrl);
         setTopArtists(profile, spotifyArtists);
         genreService.setTopGenres(profile, genres);
+        profile.setMainstreamFactor(mdnValues[0]);
+        profile.setDiverseFactor(mdnValues[1]);
+        profile.setNovelFactor(mdnValues[2]);
         return profileRepository.save(profile);
     }
 
