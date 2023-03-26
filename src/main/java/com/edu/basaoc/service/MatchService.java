@@ -32,7 +32,8 @@ public class MatchService {
                         match.getMatchDate(),
                         match.getMatchedOnType(),
                         match.getProfile2().getName(),
-                        "https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c"));
+                        match.getProfile2().getProfilePictureUrl(),
+                        match.getProfile2().getAge()));
             }
         }
 
@@ -43,7 +44,8 @@ public class MatchService {
                         match.getMatchDate(),
                         match.getMatchedOnType(),
                         match.getProfile1().getName(),
-                        "https://i.scdn.co/image/ab6775700000ee850f1daca7ddd0bc34a7d8ec2c"));
+                        match.getProfile1().getProfilePictureUrl(),
+                        match.getProfile1().getAge()));
             }
         }
         return matches;
