@@ -95,4 +95,11 @@ public class AccountService implements UserDetailsManager {
                 () -> new UsernameNotFoundException("No User found for username -> " + username)
         );
     }
+
+    //For testing purposes
+    public Account getAccountByAccountId(Long accountId) {
+        return repository.findByAccountId(accountId).orElseThrow(
+                () -> new UsernameNotFoundException("No Account found for accountId -> " + accountId)
+        );
+    }
 }

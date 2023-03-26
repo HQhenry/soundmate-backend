@@ -5,6 +5,7 @@ import com.edu.basaoc.model.payload.response.JwtResponse;
 import com.edu.basaoc.payload.request.SpotifyLoginRequest;
 import com.edu.basaoc.security.jwt.JwtUtils;
 import com.edu.basaoc.service.AccountService;
+import com.edu.basaoc.service.ProfileService;
 import com.edu.basaoc.service.SpotifyAuthService;
 import com.edu.basaoc.service.SpotifyDataService;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth/spotify")
@@ -30,7 +33,9 @@ public class SpotifyAuthController {
 
     private final AuthenticationManager authenticationManager;
     private final SpotifyAuthService authService;
+    private final SpotifyDataService dataService;
     private final AccountService accountService;
+    private final ProfileService profileService;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
@@ -38,29 +43,38 @@ public class SpotifyAuthController {
     public SpotifyAuthController(
             AuthenticationManager authenticationManager,
             SpotifyAuthService authService,
-            AccountService accountService,
-            PasswordEncoder encoder,
+            SpotifyDataService dataService, AccountService accountService,
+            ProfileService profileService, PasswordEncoder encoder,
             JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
+        this.dataService = dataService;
         this.accountService = accountService;
+        this.profileService = profileService;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
     }
 
     @PostMapping
     public ResponseEntity<JwtResponse> signIn(@RequestBody SpotifyLoginRequest loginRequest) {
-        AuthorizationCodeCredentials credentials = authService.getAccessToken(
+        AuthorizationCodeCredentials credentials = authService.getFirstAccess(
                 loginRequest.getAuthCode(),
                 loginRequest.getRedirectUri()
         );
-        String userId = new SpotifyDataService().fetchUserId(credentials.getAccessToken());
+        String userId = dataService.fetchUserId(credentials.getAccessToken());
+
         if (!accountService.userExists(userId)) {
             Account account = new Account(userId, encoder.encode(credentials.toString()));
             account.setAccessToken(credentials.getAccessToken());
             account.setRefreshToken(credentials.getRefreshToken());
             account.setAccessExpiresOn(Instant.now().plus(credentials.getExpiresIn(), ChronoUnit.SECONDS));
             accountService.createUser(account);
+
+            // TODO move this into a listener
+            Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
+            List<String> usersTopGenres = dataService.getUsersTopGenres(account);
+            String profileImageUrl = dataService.fetchUserProfilePicture(account);
+            profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl);
         } else {
             Account account = accountService.findByUsername(userId);
             account.setAccessToken(credentials.getAccessToken());
@@ -68,6 +82,12 @@ public class SpotifyAuthController {
             account.setAccessExpiresOn(Instant.now().plus(credentials.getExpiresIn(), ChronoUnit.SECONDS));
             account.setPassword(encoder.encode(credentials.toString()));
             accountService.updateUser(account);
+
+            Artist[] usersTopArtists = dataService.getUsersTopArtists(account);
+            List<String> usersTopGenres = dataService.getUsersTopGenres(account);
+            String profileImageUrl = dataService.fetchUserProfilePicture(account);
+            profileService.updateProfileImageUrl(account.getProfile(), profileImageUrl);
+            profileService.updateProfileTopValues(account.getProfile(), usersTopArtists, usersTopGenres);
         }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userId, credentials.toString()));
