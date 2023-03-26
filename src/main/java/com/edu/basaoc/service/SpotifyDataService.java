@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -87,7 +88,14 @@ public class SpotifyDataService {
                 Artist[] artists = getSeveralArtistsRequest.execute();
 
                 for (Artist artist : artists) {
-                    genres.addAll(Arrays.asList(artist.getGenres()));
+                    genres.addAll(Arrays.stream(artist.getGenres())
+                            .map(genre -> Arrays.stream(genre.split(" "))
+                                    .map(splitString -> splitString.substring(0, 1).toUpperCase() + splitString.substring(1))
+                                    .collect(Collectors.joining(" ")))
+                            .map(genre -> Arrays.stream(genre.split("-"))
+                                    .map(splitString -> splitString.substring(0, 1).toUpperCase() + splitString.substring(1))
+                                    .collect(Collectors.joining("-")))
+                            .collect(Collectors.toList()));
                 }
             }
             return genres;
