@@ -13,5 +13,5 @@ import java.net.URI;
 @AllArgsConstructor
 public class SpotifyLoginRequest {
     private String authCode;
-    private URI redirectUri;
+    private String redirectUri;
 }
