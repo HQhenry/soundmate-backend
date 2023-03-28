@@ -117,6 +117,9 @@ public class SpotifyDataService {
 
         try {
             final User user = spotifyApi.getCurrentUsersProfile().build().execute();
+            if (user.getImages().length == 0) {
+                return null;
+            }
             return user.getImages()[0].getUrl();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.error("Unexpected response from spotify", e);

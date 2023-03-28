@@ -17,5 +17,7 @@ public class MatchResponseDto {
     String name;
     String profilePictureUrl;
 
+    long age;
+
 
 }
