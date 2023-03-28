@@ -5,7 +5,11 @@ import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.payload.response.JwtResponse;
 import com.edu.basaoc.payload.request.SpotifyLoginRequest;
 import com.edu.basaoc.security.jwt.JwtUtils;
-import com.edu.basaoc.service.*;
+import com.edu.basaoc.service.AccountService;
+import com.edu.basaoc.service.ProfileService;
+import com.edu.basaoc.service.SpotifyAuthService;
+import com.edu.basaoc.service.SpotifyDataService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +39,6 @@ public class SpotifyAuthController {
     private final SpotifyDataService dataService;
     private final AccountService accountService;
     private final ProfileService profileService;
-    private final MatchService matchService;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
