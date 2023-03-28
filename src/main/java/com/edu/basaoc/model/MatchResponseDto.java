@@ -13,7 +13,7 @@ import java.util.Date;
 public class MatchResponseDto {
     private long profileId;
     LocalDate matchDate;
-    String mactchedOnType;
+    String matchedOnType;
     String name;
     String profilePictureUrl;
 

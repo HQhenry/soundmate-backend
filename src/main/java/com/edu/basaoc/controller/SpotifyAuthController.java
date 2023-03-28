@@ -77,9 +77,6 @@ public class SpotifyAuthController {
 
             FactorCalculator factorCalculator = new FactorCalculator(dataService, account);
             double [] mdnFactors = new double[3];
-            double noveltyFactor = 0;
-            double mainstreamFactor = 0;
-            double diversityFactor = 0;
             try {
                 mdnFactors[0] = factorCalculator.calculateMainstreamFactor(); // mainstreamFactor
                 mdnFactors[1] = factorCalculator.calculateDiversityFactor(); // diversityFactor
