@@ -44,6 +44,9 @@ public class ProfileService {
         profile.setProfilePictureUrl(profileImageUrl);
         setTopArtists(profile, spotifyArtists);
         genreService.setTopGenres(profile, genres);
+        profile.setAge(0);
+        profile.setName("");
+        profile.setContactInfo("");
         profile.setMainstreamFactor(mdnValues[0]);
         profile.setDiverseFactor(mdnValues[1]);
         profile.setNovelFactor(mdnValues[2]);
@@ -98,4 +101,7 @@ public class ProfileService {
         return profileRepository.findByProfileId(profileId).orElseThrow();
     }
 
+    public Profile getProfile(Account account) {
+        return profileRepository.findByAccount(account);
+    }
 }

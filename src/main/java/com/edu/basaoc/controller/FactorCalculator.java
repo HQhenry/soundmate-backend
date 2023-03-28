@@ -28,22 +28,7 @@ public class FactorCalculator {
 
         double totalPopularity = Arrays.stream(topArtists).mapToDouble(Artist::getPopularity).sum();//stream().mapToDouble(Artist::getPopularity).sum();
         return totalPopularity / topArtists.length / 100;
-
-
-
-        //TEST
-        /*
-        int[] testValues = {}
-        for (Integer count : genreCountMap.values()) {
-            double probability = (double) count / totalGenres;
-            shannonEntropy -= probability * (Math.log(probability) / Math.log(2));
-        }
-        System.out.println("totalgenres: " + totalGenres);
-        double maxEntropy = Math.log(totalGenres) / Math.log(2);
-        double normalizedDiversityFactor = shannonEntropy / maxEntropy;*/
-
     }
-
 
     static double calculateDiversityFactor() throws Exception {
         Artist[] topArtists = dataService.getUsersTopArtists(account, 50);
@@ -57,18 +42,15 @@ public class FactorCalculator {
                 totalGenres++;
             }
         }
-
         double shannonEntropy = 0.0;
-        genreCountMap.keySet().forEach(key -> System.out.println(key + " " + key + ", occurances:  " + genreCountMap.get(key)));
+        //genreCountMap.keySet().forEach(key -> System.out.println(key + " " + key + ", occurances:  " + genreCountMap.get(key)));
         for (Integer count : genreCountMap.values()) {
             double probability = (double) count / totalGenres;
             shannonEntropy -= probability * (Math.log(probability) / Math.log(2));
         }
-        System.out.println("totalgenres: " + totalGenres);
-        double maxEntropy = Math.log(totalGenres) / Math.log(2);
-        double normalizedDiversityFactor = shannonEntropy / maxEntropy;
 
-        return normalizedDiversityFactor;
+        double maxEntropy = Math.log(totalGenres) / Math.log(2);
+        return shannonEntropy / maxEntropy;
     }
     static double calculateNoveltyFactor() throws Exception {
         Track[] topTracks = dataService.getUsersTopTracks(account, 50);
@@ -80,28 +62,22 @@ public class FactorCalculator {
         long maxDaysSinceRelease = 0;
         int amountNewSongs = 0;
         for (Track track : topTracks) {
-            LocalDate releaseDate = LocalDate.parse(track.getAlbum().getReleaseDate());
-            long daysSinceRelease = ChronoUnit.DAYS.between(releaseDate, currentDate);
-            totalDays += daysSinceRelease;
-            if (daysSinceRelease < 365) {
-                amountNewSongs++;
-            }
-            if (daysSinceRelease > maxDaysSinceRelease) {
-                maxDaysSinceRelease = daysSinceRelease;
-                //System.out.println("days since release: " + daysSinceRelease);
-
+            try {
+                LocalDate releaseDate = LocalDate.parse(track.getAlbum().getReleaseDate());
+                long daysSinceRelease = ChronoUnit.DAYS.between(releaseDate, currentDate);
+                totalDays += daysSinceRelease;
+                if (daysSinceRelease < 365) {
+                    amountNewSongs++;
+                }
+                if (daysSinceRelease > maxDaysSinceRelease) {
+                    maxDaysSinceRelease = daysSinceRelease;
+                }
+            } catch(Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
-
-
-
         double averageDaysSinceRelease = totalDays / numTracks;
-        double maxDays = 365 ; //6 * 30 ;// 6 Monate // 365 *5
-        //System.out.println("maxDays: " + maxDays);
-        double noveltyFactor = averageDaysSinceRelease / maxDays;
-        //double noveltyFactor = amountNewSongs / numTracks;
-        //System.out.println("amountNew Songs: " + amountNewSongs);
-        //System.out.println("numTracks: " + numTracks);
+        double maxDays = 365 * 3.0 ;  // 3 Jahre
 
         // Normieren
         return amountNewSongs / (double) numTracks;

@@ -1,13 +1,11 @@
 package com.edu.basaoc.controller;
 
 import com.edu.basaoc.model.entity.Account;
+import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.payload.response.JwtResponse;
 import com.edu.basaoc.payload.request.SpotifyLoginRequest;
 import com.edu.basaoc.security.jwt.JwtUtils;
-import com.edu.basaoc.service.AccountService;
-import com.edu.basaoc.service.ProfileService;
-import com.edu.basaoc.service.SpotifyAuthService;
-import com.edu.basaoc.service.SpotifyDataService;
+import com.edu.basaoc.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +34,7 @@ public class SpotifyAuthController {
     private final SpotifyDataService dataService;
     private final AccountService accountService;
     private final ProfileService profileService;
+    private final MatchService matchService;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
@@ -44,13 +43,14 @@ public class SpotifyAuthController {
             AuthenticationManager authenticationManager,
             SpotifyAuthService authService,
             SpotifyDataService dataService, AccountService accountService,
-            ProfileService profileService, PasswordEncoder encoder,
+            ProfileService profileService, MatchService matchService, PasswordEncoder encoder,
             JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.dataService = dataService;
         this.accountService = accountService;
         this.profileService = profileService;
+        this.matchService = matchService;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
     }
@@ -81,14 +81,16 @@ public class SpotifyAuthController {
             double mainstreamFactor = 0;
             double diversityFactor = 0;
             try {
-                mdnFactors[2] = factorCalculator.calculateNoveltyFactor(); //noveltyFactor
                 mdnFactors[0] = factorCalculator.calculateMainstreamFactor(); // mainstreamFactor
                 mdnFactors[1] = factorCalculator.calculateDiversityFactor(); // diversityFactor
+                mdnFactors[2] = factorCalculator.calculateNoveltyFactor(); //noveltyFactor
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
             profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl, mdnFactors);
+            Profile profile = profileService.getProfile(account);
+            matchService.calculateMatches(profile);
         } else {
             Account account = accountService.findByUsername(userId);
             account.setAccessToken(credentials.getAccessToken());

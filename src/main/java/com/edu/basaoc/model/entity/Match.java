@@ -19,12 +19,13 @@ public class Match {
     @Column(name = "match_id")
     private Long matchId;
 
+    @Setter
     @Column(name = "date")
     private LocalDate matchDate;
 
-    @Enumerated(EnumType.STRING)
+    @Setter
     @Column(name = "matched_on_type")
-    private ListeningType matchedOnType;
+    private String matchedOnType;
 
 
     @Setter
