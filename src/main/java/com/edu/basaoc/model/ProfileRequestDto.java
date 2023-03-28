@@ -12,5 +12,6 @@ public class ProfileRequestDto {
         private String name;
         private long age;
         private String contactInfo;
+        private String bio;
 
 }

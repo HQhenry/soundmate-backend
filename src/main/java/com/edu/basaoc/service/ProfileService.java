@@ -47,6 +47,7 @@ public class ProfileService {
         profile.setAge(0);
         profile.setName("");
         profile.setContactInfo("");
+        profile.setBio("");
         profile.setMainstreamFactor(mdnValues[0]);
         profile.setDiverseFactor(mdnValues[1]);
         profile.setNovelFactor(mdnValues[2]);
@@ -57,6 +58,7 @@ public class ProfileService {
         profile.setName(requestDto.getName());
         profile.setAge(requestDto.getAge());
         profile.setContactInfo(requestDto.getContactInfo());
+        profile.setBio(requestDto.getBio());
         return profileRepository.save(profile);
     }
 

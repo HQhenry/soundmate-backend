@@ -56,6 +56,10 @@ public class Profile {
     @Column(name = "profile_image_url")
     private String profilePictureUrl;
 
+    @Setter
+    @Column(name = "bio")
+    private String bio;
+
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

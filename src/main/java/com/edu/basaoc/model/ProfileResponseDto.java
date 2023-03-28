@@ -20,4 +20,5 @@ public class ProfileResponseDto {
     private Set<ArtistDto> topArtists;
     private Set<GenreDto> topGenres;
     private String profilePictureUrl;
+    private String bio;
 }
