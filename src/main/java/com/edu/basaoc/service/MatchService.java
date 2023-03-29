@@ -29,8 +29,11 @@ public class MatchService {
         profiles.remove(profile);
 
         double[] myProfileFeatures = new double[3];
-        //Handling if profile is empty
+        myProfileFeatures[0] = profile.getMainstreamFactor();
+        myProfileFeatures[1] = profile.getNovelFactor();
+        myProfileFeatures[2] = profile.getDiverseFactor();
 
+        //Handling if profile is empty
         if (profiles.isEmpty()) {
             return;
         }
@@ -50,31 +53,35 @@ public class MatchService {
         int k = 0;
         int size = profiles.size();
 
-        if (size < 5) {
+        if (size < 6) {
             k = size;
         } else {
-            k = 5;
+            k = 6;
         }
 
-        // Sort the array
-        Profile[] neighbors = Arrays.stream(profileDistanceObjects)
+        Arrays.stream(profileDistanceObjects)
                 .sorted(Comparator.comparingDouble(ProfileDistance::getDistance))
-                .map(ProfileDistance::getProfile)
                 .limit(k)
-                .toArray(Profile[]::new);
-        for (Profile neighbor : neighbors) {
-            Match match = new Match();
-            match.setProfile1(profile);
-            match.setProfile2(neighbor);
-            match.setMatchDate(LocalDate.now());
-            match.setMatchedOnType("Profile 1 mnd values: " + profile.getMainstreamFactor() + " " + profile.getNovelFactor() + " " + profile.getDiverseFactor() + " Profile 2 mnd values: " + neighbor.getMainstreamFactor() + " " + neighbor.getNovelFactor() + " " + neighbor.getDiverseFactor() );
-            matchRepository.save(match);
-        }
+                .forEach((ProfileDistance neighborDistance) -> {
+                    Profile neighbor = neighborDistance.getProfile();
+                    List<Match> previousMatches = matchRepository.findAllByProfile1AndProfile2(profile, neighbor);
+                    previousMatches.addAll(matchRepository.findAllByProfile1AndProfile2(neighbor, profile));
+                    if (previousMatches.isEmpty()) {
+                        Match match = new Match();
+                        match.setProfile1(profile);
+                        match.setProfile2(neighbor);
+                        match.setMatchDate(LocalDate.now());
+                        match.setDistance(neighborDistance.getDistance());
+                        match.setMatchedOnType("Profile 1 mnd values: " + profile.getMainstreamFactor() + " " + profile.getNovelFactor() + " " + profile.getDiverseFactor() + " Profile 2 mnd values: " + neighbor.getMainstreamFactor() + " " + neighbor.getNovelFactor() + " " + neighbor.getDiverseFactor());
+                        matchRepository.save(match);
+                    }
+                });
     }
+
     public List<MatchResponseDto> getMatches(Account account) {
         List<MatchResponseDto> matches = new ArrayList<>();
 
-        Optional<List<Match>> matchOptional1 =  matchRepository.findAllByProfile1(account.getProfile());
+        Optional<List<Match>> matchOptional1 = matchRepository.findAllByProfile1(account.getProfile());
         Optional<List<Match>> matchOptional2 = matchRepository.findAllByProfile2(account.getProfile());
 
         if (matchOptional1.isPresent()) {
@@ -83,6 +90,7 @@ public class MatchService {
                         match.getProfile2().getProfileId(),
                         match.getMatchDate(),
                         match.getMatchedOnType(),
+                        match.getDistance(),
                         match.getProfile2().getName(),
                         match.getProfile2().getProfilePictureUrl(),
                         match.getProfile2().getAge()));
@@ -95,11 +103,13 @@ public class MatchService {
                         match.getProfile1().getProfileId(),
                         match.getMatchDate(),
                         match.getMatchedOnType(),
+                        match.getDistance(),
                         match.getProfile1().getName(),
                         match.getProfile1().getProfilePictureUrl(),
                         match.getProfile1().getAge()));
             }
         }
+        matches.sort(Comparator.comparingDouble(MatchResponseDto::getDistance));
         return matches;
     }
 
@@ -109,6 +119,28 @@ public class MatchService {
             sum += Math.pow(profileFactors[i] - otherProfileFactors[i], 2);
         }
         return Math.sqrt(sum);
+    }
+
+    public void recalcAllMatches() {
+        List<Match> allMatches = matchRepository.findAll();
+        for (Match match : allMatches) {
+            double[] profile1Features = new double[3];
+            profile1Features[0] = match.getProfile1().getMainstreamFactor();
+            profile1Features[1] = match.getProfile1().getNovelFactor();
+            profile1Features[2] = match.getProfile1().getDiverseFactor();
+
+            double[] profile2Features = new double[3];
+            profile2Features[0] = match.getProfile2().getMainstreamFactor();
+            profile2Features[1] = match.getProfile2().getNovelFactor();
+            profile2Features[2] = match.getProfile2().getDiverseFactor();
+
+            match.setDistance(distance(profile1Features, profile2Features));
+            matchRepository.save(match);
+        }
+        List<Profile> allProfiles = profileRepository.findAll();
+        for (Profile profile : allProfiles) {
+            calculateMatches(profile);
+        }
     }
 }
 

@@ -14,9 +14,9 @@ public class MatchResponseDto {
     private long profileId;
     LocalDate matchDate;
     String matchedOnType;
+    double distance;
     String name;
     String profilePictureUrl;
-
     long age;
 
 

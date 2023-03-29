@@ -66,21 +66,32 @@ public class SpotifyAuthController {
                 loginRequest.getRedirectUri()
         );
         String userId = dataService.fetchUserId(credentials.getAccessToken());
-
+        Account account;
         if (!accountService.userExists(userId)) {
-            Account account = new Account(userId, encoder.encode(credentials.toString()));
+            account = new Account(userId, encoder.encode(credentials.toString()));
             account.setAccessToken(credentials.getAccessToken());
             account.setRefreshToken(credentials.getRefreshToken());
             account.setAccessExpiresOn(Instant.now().plus(credentials.getExpiresIn(), ChronoUnit.SECONDS));
             accountService.createUser(account);
+        } else {
+            account = accountService.findByUsername(userId);
+            account.setAccessToken(credentials.getAccessToken());
+            account.setRefreshToken(credentials.getRefreshToken());
+            account.setAccessExpiresOn(Instant.now().plus(credentials.getExpiresIn(), ChronoUnit.SECONDS));
+            account.setPassword(encoder.encode(credentials.toString()));
+            accountService.updateUser(account);
+        }
 
-            // TODO move this into a listener
-            Artist[] usersTopArtists = dataService.getUsersTopArtists(account, 10);
-            List<String> usersTopGenres = dataService.getUsersTopGenres(account);
-            String profileImageUrl = dataService.fetchUserProfilePicture(account);
-
+        // TODO move this into a listener
+        Artist[] usersTopArtists = dataService.getUsersTopArtists(account, 10);
+        List<String> usersTopGenres = dataService.getUsersTopGenres(account);
+        String profileImageUrl = dataService.fetchUserProfilePicture(account);
+        if (account.getProfile() != null) {
+            profileService.updateProfileImageUrl(account.getProfile(), profileImageUrl);
+            profileService.updateProfileTopValues(account.getProfile(), usersTopArtists, usersTopGenres);
+        } else {
             FactorCalculator factorCalculator = new FactorCalculator(dataService, account);
-            double [] mdnFactors = new double[3];
+            double[] mdnFactors = new double[3];
             try {
                 mdnFactors[0] = factorCalculator.calculateMainstreamFactor(); // mainstreamFactor
                 mdnFactors[1] = factorCalculator.calculateDiversityFactor(); // diversityFactor
@@ -92,20 +103,8 @@ public class SpotifyAuthController {
             profileService.createProfile(account, usersTopArtists, usersTopGenres, profileImageUrl, mdnFactors);
             Profile profile = profileService.getProfile(account);
             matchService.calculateMatches(profile);
-        } else {
-            Account account = accountService.findByUsername(userId);
-            account.setAccessToken(credentials.getAccessToken());
-            account.setRefreshToken(credentials.getRefreshToken());
-            account.setAccessExpiresOn(Instant.now().plus(credentials.getExpiresIn(), ChronoUnit.SECONDS));
-            account.setPassword(encoder.encode(credentials.toString()));
-            accountService.updateUser(account);
-
-            Artist[] usersTopArtists = dataService.getUsersTopArtists(account, 10);
-            List<String> usersTopGenres = dataService.getUsersTopGenres(account);
-            String profileImageUrl = dataService.fetchUserProfilePicture(account);
-            profileService.updateProfileImageUrl(account.getProfile(), profileImageUrl);
-            profileService.updateProfileTopValues(account.getProfile(), usersTopArtists, usersTopGenres);
         }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userId, credentials.toString()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

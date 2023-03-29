@@ -37,4 +37,10 @@ public class MatchController {
         }
         return ResponseEntity.ok().body(matchService.getMatches(account));
     }
+
+    @GetMapping("/recalc")
+    public ResponseEntity<String> recalcMatches() {
+        matchService.recalcAllMatches();
+        return new ResponseEntity<>("Finished recalculating", HttpStatus.OK);
+    }
 }

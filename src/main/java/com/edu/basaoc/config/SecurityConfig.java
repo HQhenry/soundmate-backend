@@ -49,7 +49,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests()
-                .antMatchers("/api/auth/**")
+                .antMatchers("/api/auth/**", "/api/match/recalc")
                 .permitAll()
                 .anyRequest().authenticated().and()
                 .authenticationProvider(getAuthenticationProvider())

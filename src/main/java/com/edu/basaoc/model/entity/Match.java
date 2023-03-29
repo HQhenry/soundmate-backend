@@ -1,12 +1,19 @@
 package com.edu.basaoc.model.entity;
 
 
-import com.edu.basaoc.model.ListeningType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
@@ -38,5 +45,7 @@ public class Match {
     @JoinColumn(name = "profile_2_fk", referencedColumnName = "profile_id")
     private Profile profile2;
 
+    @Setter
+    private double distance;
 
 }
