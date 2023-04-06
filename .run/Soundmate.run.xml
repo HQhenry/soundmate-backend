@@ -1,0 +1,32 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Soundmate" type="SpringBootApplicationConfigurationType"
+                   factoryName="Spring Boot">
+        <option name="ACTIVE_PROFILES"/>
+        <envs>
+            <env name="JWT_SECRET" value="your-jwt-secret"/>
+            <env name="PG_PASSWORD" value="your-postgres-password"/>
+            <env name="SPOTIFY_CLIENT_SECRET" value="your-spotify-client-secret"/>
+        </envs>
+        <module name="Spotifriends"/>
+        <option name="SPRING_BOOT_MAIN_CLASS" value="com.edu.basaoc.SoundmateApplication"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.edu.basaoc.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <extension name="net.ashald.envfile">
+            <option name="IS_ENABLED" value="false"/>
+            <option name="IS_SUBST" value="false"/>
+            <option name="IS_PATH_MACRO_SUPPORTED" value="false"/>
+            <option name="IS_IGNORE_MISSING_FILES" value="false"/>
+            <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false"/>
+            <ENTRIES>
+                <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false"/>
+            </ENTRIES>
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
+</component>
