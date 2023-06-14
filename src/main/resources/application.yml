@@ -9,6 +9,6 @@ spring:
 soundmate:
   jwtSecret: ${JWT_SECRET}
   jwtExpirationDays: 30
-  spotifyClientId: 83bf8873115447d893923470b70d209a
+  spotifyClientId: 732952d94d384cb2a34885c376f835f3
   spotifyClientSecret: ${SPOTIFY_CLIENT_SECRET}
 
