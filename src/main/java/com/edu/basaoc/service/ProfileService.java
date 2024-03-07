@@ -1,6 +1,7 @@
 package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.ArtistDto;
+import com.edu.basaoc.model.GenderType;
 import com.edu.basaoc.model.ProfileRequestDto;
 import com.edu.basaoc.model.entity.Account;
 import com.edu.basaoc.model.entity.Artist;
@@ -48,6 +49,7 @@ public class ProfileService {
         profile.setName("");
         profile.setContactInfo("");
         profile.setBio("");
+        profile.setGenderType(null);
         profile.setMainstreamFactor(mdnValues[0]);
         profile.setDiverseFactor(mdnValues[1]);
         profile.setNovelFactor(mdnValues[2]);
@@ -59,6 +61,7 @@ public class ProfileService {
         profile.setAge(requestDto.getAge());
         profile.setContactInfo(requestDto.getContactInfo());
         profile.setBio(requestDto.getBio());
+        profile.setGenderType(requestDto.getGenderType());
         return profileRepository.save(profile);
     }
 

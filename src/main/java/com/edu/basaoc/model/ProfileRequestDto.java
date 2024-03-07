@@ -13,5 +13,6 @@ public class ProfileRequestDto {
         private long age;
         private String contactInfo;
         private String bio;
+        private GenderType genderType;
 
 }

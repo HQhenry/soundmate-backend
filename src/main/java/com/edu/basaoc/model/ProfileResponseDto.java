@@ -21,4 +21,5 @@ public class ProfileResponseDto {
     private Set<GenreDto> topGenres;
     private String profilePictureUrl;
     private String bio;
+    private GenderType genderType;
 }
