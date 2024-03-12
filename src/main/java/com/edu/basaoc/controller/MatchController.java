@@ -1,9 +1,14 @@
 package com.edu.basaoc.controller;
 
+import com.edu.basaoc.model.GenreDto;
 import com.edu.basaoc.model.MatchResponseDto;
 import com.edu.basaoc.model.entity.Account;
+import com.edu.basaoc.model.entity.Genre;
+import com.edu.basaoc.model.entity.Profile;
+import com.edu.basaoc.model.mapper.GenreDtoMapper;
 import com.edu.basaoc.service.AccountService;
 import com.edu.basaoc.service.MatchService;
+import com.edu.basaoc.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/match")
@@ -22,10 +28,15 @@ public class MatchController {
     private final AccountService accountService;
     private final MatchService matchService;
 
+    private final ProfileService profileService;
 
-    public MatchController(AccountService accountService, MatchService matchService) {
+
+
+    public MatchController(AccountService accountService, MatchService matchService, ProfileService profileService) {
         this.accountService = accountService;
         this.matchService = matchService;
+        this.profileService = profileService;
+
     }
 
     @GetMapping
@@ -35,7 +46,7 @@ public class MatchController {
         if (matches.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok().body(matchService.getMatches(account));
+        return ResponseEntity.ok().body(matches);
     }
 
     @GetMapping("/recalc")

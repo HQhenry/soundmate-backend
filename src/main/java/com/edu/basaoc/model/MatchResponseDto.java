@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,6 +19,9 @@ public class MatchResponseDto {
     String name;
     String profilePictureUrl;
     long age;
+    private Set<GenreDto> topGenres;
+    private GenderType genderType;
+
 
 
 }

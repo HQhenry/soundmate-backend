@@ -2,20 +2,27 @@ package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.MatchResponseDto;
 import com.edu.basaoc.model.entity.Account;
+import com.edu.basaoc.model.entity.Genre;
 import com.edu.basaoc.model.entity.Match;
 import com.edu.basaoc.model.entity.Profile;
+import com.edu.basaoc.model.mapper.GenreDtoMapper;
+import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.MatchRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
 
     private final MatchRepository matchRepository;
     private final ProfileRepository profileRepository;
+    private final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
+
 
     public MatchService(MatchRepository matchRepository, ProfileRepository profileRepository) {
         this.matchRepository = matchRepository;
@@ -93,7 +100,11 @@ public class MatchService {
                         match.getDistance(),
                         match.getProfile2().getName(),
                         match.getProfile2().getProfilePictureUrl(),
-                        match.getProfile2().getAge()));
+                        match.getProfile2().getAge(),
+                        match.getProfile2().getTopGenres().stream()
+                                .map(genreDtoMapper::entityToDto)
+                                .collect(Collectors.toSet()),
+                        match.getProfile2().getGenderType()));
             }
         }
 
@@ -105,8 +116,12 @@ public class MatchService {
                         match.getMatchedOnType(),
                         match.getDistance(),
                         match.getProfile1().getName(),
-                        match.getProfile1().getProfilePictureUrl(),
-                        match.getProfile1().getAge()));
+                        match.getProfile2().getProfilePictureUrl(),
+                        match.getProfile2().getAge(),
+                        match.getProfile1().getTopGenres().stream()
+                                .map(genreDtoMapper::entityToDto)
+                                .collect(Collectors.toSet()),
+                        match.getProfile1().getGenderType()));
             }
         }
         matches.sort(Comparator.comparingDouble(MatchResponseDto::getDistance));
