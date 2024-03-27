@@ -22,4 +22,9 @@ public class ProfileResponseDto {
     private String profilePictureUrl;
     private String bio;
     private GenderType genderType;
+    private double novelFactor;
+    private double diverseFactor;
+    private double mainstreamFactor;
+
+
 }
