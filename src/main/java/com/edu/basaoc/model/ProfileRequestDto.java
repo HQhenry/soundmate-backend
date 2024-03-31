@@ -14,5 +14,7 @@ public class ProfileRequestDto {
         private String contactInfo;
         private String bio;
         private GenderType genderType;
+        private Double latitude;
+        private Double longitude;
 
 }

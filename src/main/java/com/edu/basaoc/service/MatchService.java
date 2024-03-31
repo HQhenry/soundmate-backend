@@ -104,7 +104,9 @@ public class MatchService {
                         match.getProfile2().getTopGenres().stream()
                                 .map(genreDtoMapper::entityToDto)
                                 .collect(Collectors.toSet()),
-                        match.getProfile2().getGenderType()));
+                        match.getProfile2().getGenderType(),
+                        match.getProfile2().getLatitude(),
+                        match.getProfile2().getLongitude()));
             }
         }
 
@@ -116,12 +118,14 @@ public class MatchService {
                         match.getMatchedOnType(),
                         match.getDistance(),
                         match.getProfile1().getName(),
-                        match.getProfile2().getProfilePictureUrl(),
-                        match.getProfile2().getAge(),
+                        match.getProfile1().getProfilePictureUrl(),
+                        match.getProfile1().getAge(),
                         match.getProfile1().getTopGenres().stream()
                                 .map(genreDtoMapper::entityToDto)
                                 .collect(Collectors.toSet()),
-                        match.getProfile1().getGenderType()));
+                        match.getProfile1().getGenderType(),
+                        match.getProfile1().getLatitude(),
+                        match.getProfile1().getLongitude()));
             }
         }
         matches.sort(Comparator.comparingDouble(MatchResponseDto::getDistance));

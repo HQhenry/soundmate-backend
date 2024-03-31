@@ -21,6 +21,8 @@ public class MatchResponseDto {
     long age;
     private Set<GenreDto> topGenres;
     private GenderType genderType;
+    private Double latitude;
+    private Double longitude;
 
 
 

@@ -26,5 +26,8 @@ public class ProfileResponseDto {
     private double diverseFactor;
     private double mainstreamFactor;
 
+    private Double latitude;
+    private Double longitude;
+
 
 }

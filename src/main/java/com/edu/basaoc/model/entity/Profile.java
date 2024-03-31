@@ -79,6 +79,14 @@ public class Profile {
     )
     private Set<Genre> topGenres = new HashSet<>();
 
+    @Setter
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Setter
+    @Column(name = "longitude")
+    private Double longitude;
+
     public void addTopArtist(Artist artist) {
         topArtists.add(artist);
         artist.getProfiles().add(this);
