@@ -57,7 +57,11 @@ public class ProfileService {
     }
 
     public Profile updateProfile(Profile profile, ProfileRequestDto requestDto) {
-        if (requestDto.getLatitude() != null && requestDto.getLongitude() != null) {
+        if ( requestDto.getName() == null &&
+        requestDto.getAge() == 0 &&
+        requestDto.getContactInfo() == null &&
+        requestDto.getBio() == null &&
+        requestDto.getGenderType() == null) {
             profile.setLatitude(requestDto.getLatitude());
             profile.setLongitude(requestDto.getLongitude());
             return profileRepository.save(profile);
