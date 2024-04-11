@@ -1,6 +1,8 @@
 package com.edu.basaoc.model.entity;
 
 import com.edu.basaoc.model.GenderType;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +19,7 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
+
     private long profileId;
     @Setter
     @Column(name = "name")
@@ -107,3 +110,4 @@ public class Profile {
         genre.getProfiles().remove(this);
     }
 }
+

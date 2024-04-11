@@ -2,11 +2,9 @@ package com.edu.basaoc.service;
 
 import com.edu.basaoc.model.MatchResponseDto;
 import com.edu.basaoc.model.entity.Account;
-import com.edu.basaoc.model.entity.Genre;
 import com.edu.basaoc.model.entity.Match;
 import com.edu.basaoc.model.entity.Profile;
 import com.edu.basaoc.model.mapper.GenreDtoMapper;
-import com.edu.basaoc.model.mapper.ProfileResponseDtoMapper;
 import com.edu.basaoc.model.repository.MatchRepository;
 import com.edu.basaoc.model.repository.ProfileRepository;
 import org.mapstruct.factory.Mappers;
@@ -18,15 +16,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
-
     private final MatchRepository matchRepository;
     private final ProfileRepository profileRepository;
     private final GenreDtoMapper genreDtoMapper = Mappers.getMapper(GenreDtoMapper.class);
+    private final ChatRoomService chatRoomService;
 
-
-    public MatchService(MatchRepository matchRepository, ProfileRepository profileRepository) {
+    public MatchService(MatchRepository matchRepository, ProfileRepository profileRepository, ChatRoomService chatMessageService) {
         this.matchRepository = matchRepository;
         this.profileRepository = profileRepository;
+        this.chatRoomService = chatMessageService;
     }
 
     public void calculateMatches(Profile profile) {
@@ -129,6 +127,11 @@ public class MatchService {
             }
         }
         matches.sort(Comparator.comparingDouble(MatchResponseDto::getDistance));
+        for (MatchResponseDto match : matches
+             ) {
+           chatRoomService.getChatRoomId(match.getProfileId(), account.getProfile().getProfileId(), true);
+
+        }
         return matches;
     }
 

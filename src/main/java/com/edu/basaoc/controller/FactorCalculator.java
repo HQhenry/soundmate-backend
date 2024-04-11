@@ -31,9 +31,10 @@ public class FactorCalculator {
     }
 
     static double calculateDiversityFactor() throws Exception {
-        Artist[] topArtists = dataService.getUsersTopArtists(account, 50);
-
+        Artist[] topArtists = dataService
+                .getUsersTopArtists(account, 50);
         Map<String, Integer> genreCountMap = new HashMap<>();
+
         int totalGenres = 0;
         for (Artist artist : topArtists) {
             Set<String> uniqueGenres = new HashSet<>(Arrays.asList(artist.getGenres()));
@@ -43,12 +44,10 @@ public class FactorCalculator {
             }
         }
         double shannonEntropy = 0.0;
-        //genreCountMap.keySet().forEach(key -> System.out.println(key + " " + key + ", occurances:  " + genreCountMap.get(key)));
         for (Integer count : genreCountMap.values()) {
             double probability = (double) count / totalGenres;
             shannonEntropy -= probability * (Math.log(probability) / Math.log(2));
         }
-
         double maxEntropy = Math.log(totalGenres) / Math.log(2);
         return shannonEntropy / maxEntropy;
     }
