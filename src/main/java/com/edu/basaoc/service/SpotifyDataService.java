@@ -128,7 +128,7 @@ public class SpotifyDataService {
             if (user.getImages().length == 0) {
                 return null;
             }
-            return user.getImages()[0].getUrl();
+            return user.getImages()[1].getUrl();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.error("Unexpected response from spotify", e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected response from spotify");
