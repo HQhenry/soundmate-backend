@@ -102,8 +102,7 @@ public class ChatController {
         return ResponseEntity.ok().body(chatMessageResponseDtos);
     }
 
-    @GetMapping("/chatRooms")
-    //TODO: change this to api/chatRooms
+    @GetMapping("/api/chatRooms")
     public ResponseEntity<List<ChatRoomResponseDto>> getChatRooms(Principal principal) {
         Account account = accountService.findByUsername(principal.getName());
         Profile profile = account.getProfile();
