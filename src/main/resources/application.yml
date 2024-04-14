@@ -2,9 +2,9 @@ spring:
   config:
     import: optional:configtree:/run/secrets/
   datasource:
-    url: jdbc:postgresql://localhost:5432/soundmate
-    username: postgres
-    password: ${pg_password}
+    url: jdbc:postgresql://postgresql_db:5432/soundmate
+    username: soundmate
+    password: ${postgres_password}
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
 
@@ -13,4 +13,3 @@ soundmate:
   jwtExpirationDays: 30
   spotifyClientId: 732952d94d384cb2a34885c376f835f3
   spotifyClientSecret: ${spotify_client_secret}
-
