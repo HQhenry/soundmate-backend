@@ -7,18 +7,8 @@ The backend application in this repository offers an API for account & profile c
 algorithm for Soundmate. All endpoints are secured with Spring Security and JWTs. Data is stored in a postgres database,
 which is set up by liquibase.
 
-Soundmate has been developed in a team of three as part of a university course given at
-[HTW Berlin](https://www.htw-berlin.de/)
-by [Prof. Dr. Regina Frieß](https://www.htw-berlin.de/hochschule/personen/person/?eid=12381). We were tasked with an
-empirical study relating to this app. In this study a scientific background was developed, in order to create the
-matching algorithm. The app was then given to ~35 testers and later evaluated, which resulted in a lot of positive
-reactions and a promising outlook on further development.
+Soundmate was initially developed as part of a university course at [HTW Berlin](https://www.htw-berlin.de/) taught by [Prof. Dr. Regina Frieß](https://www.htw-berlin.de/hochschule/personen/person/?eid=12381), and then further developed under the supervision of [Prof. Dr. Gefei Zhang](https://www.htw-berlin.de/hochschule/personen/person/?eid=10755).
 
-## The Team
-
-* [Finja Scheltens](https://github.com/finja-scheltens): Design and Frontend-Development
-* [Henry Ordelt](https://github.com/HQhenry): Backend-Development
-* [Pauline Röhr](https://github.com/proehr): Backend-Development and Ops
 
 # Local Setup
 
